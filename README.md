@@ -38,6 +38,7 @@ Zusätzlich: Lernstoff aus den Vorlesungsfolien "Theorie Session – Kapitel 4: 
 - JSON Web Token (Artikel): https://www.geeksforgeeks.org/web-tech/json-web-token-jwt/
 - RESTful HTTP Methods (Erklärung): https://restfulapi.net/http-methods/
 ![Projektübersicht](Bilder/CRUID.png)
+![Projektübersicht](Bilder/httpCodes.png)
 
 
 ## Datenbankpasswörter & Anleitung
