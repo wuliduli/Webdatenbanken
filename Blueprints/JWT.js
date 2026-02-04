@@ -1,5 +1,5 @@
 import {JWT} from "tokenCheck&JWT.js";
-var tokenCheck (function () {
+var tokenCheck = (function () {
   "use strict";
 
 // Prinzip: Senden & Antwort (expected code), success & fail validation
