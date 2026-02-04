@@ -123,7 +123,9 @@ Kontoansicht (Users)
 
 ## Genaue Ziele (EPICS)
 - Blueprints (Vorarbeit):
-    - JWT → erstellen + Validierung
+    - JWT → erstellen + Validierung 
+    - Qualitätssicherrung: JSON-Struktur Annahme Tests, Response Times Tests, Tests auf technische Verbindungsfehler und Logische Verbindungsfehler(pw nicht richtig etc (nach überreichung der JSON))
+    
     - Login
     - Registrieren
     - Passwort vergessen

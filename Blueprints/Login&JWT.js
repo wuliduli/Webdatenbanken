@@ -27,11 +27,10 @@ var login = (function () {
         Passwort: "",
     };
     login.AnmeldedatenJSON = JSON.stringify(login.Anmeldedaten);
-    login.token = null;
+   
     login.finishedWithError = false;
     login.error = {};
 	// JWT variables
-
     login.JWT = {};
 
     //************************************************
@@ -39,18 +38,16 @@ var login = (function () {
 
 	// init object 
 
-	login.init = function () {
-		// init object here
-	};
+
 
     // post login data with ajax and get JWT
 
 	login.createLogin = function () {
 
-        xhttp.send("POST", "auth/login", true, login.AnmeldedatenJSON);
-        if (xhttp.status === 200) {success_func()}
+        xhttp.open("POST", "auth/login", true);
+        if (xhttp.readystate === 4 && xhttp.status === 200) {success_func()}
         else if (xhttp.status !== 200) {error_func()}
-
+        xhttp.send(login.AnmeldedatenJSON);
         function success_func () {
             login.finishedWithError = false;
             login.response = {
@@ -71,10 +68,8 @@ var login = (function () {
     return login;
 }
     login.takeJWT = function () {
-        var jsonResponse = JSON.parse(xhttp.responseText);
-        login.JWT = jsonResponse.token;
-        println("JWT: " + login.JWT);
-
+        var JWT = JSON.parse(xhttp.responseText);
+        println(JWT);
     }
 ();})
 
