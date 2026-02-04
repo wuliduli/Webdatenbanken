@@ -1,0 +1,10 @@
+{ 
+	"header" : "Hello, I'm AJAX", 
+	"text" : [ 
+		{ "item" : "but I'm not a programming language." }, 
+		{ "item" : "I am a technique for accessing web servers from a web page." },
+		{ "item" : "I stand for Asyncronous JavaScript And XML." },
+		{ "item" : "But don't get me wrong, I know I can also do it syncronously and give you JSON!" },
+		{ "item" : "And as I love JSON more every day I did load this as JSON!" }
+	]
+}
