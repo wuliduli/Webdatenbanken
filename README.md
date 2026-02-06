@@ -6,7 +6,7 @@ Ziel ist es, die Kommunikation zwischen unserer Gruppe (Gruppe‑FB4) und der RE
 
 ![Projektübersicht](Bilder/Project.png)
 ![Projektübersicht](Bilder/Project1.png)
-![Projektübersicht](Bilder/ERM-Entwurf.png)
+![Projektübersicht](Bilder/ERM-Modell.png)
 ![Projektübersicht](Bilder/ajax-block-diagram1.jpg)
 
 ## Aufgabenstellung
@@ -15,7 +15,64 @@ Ziel ist es, die Kommunikation zwischen unserer Gruppe (Gruppe‑FB4) und der RE
 - Authentifizierung/Autorisierung mittels JSON Web Tokens (JWT)
 - Asynchrone Anfragen mit AJAX (jQuery)
 
-
+## Architektur
+# Überblick
+```bash
+wiwsall
+├── public 📁
+├── src 📁
+├── vendor 📁
+├── .htaccess
+├── .htpasswd
+└── index.html
+```
+# JavaScript
+```bash
+wiwsall
+├── public
+│   ├── css 📁
+│   ├── img 📁
+│   └── js 📁
+│       ├──bootstrap 📁
+│       ├── /*app.js
+│       ├── /*timeEntry.js
+│       ├── /*user.js
+│       ├── swagger 📁
+│       ├── .htaccess
+│       ├── favicon.ico
+│       ├── index.html
+│       ├── index.php
+│       ├── timeEntries.html
+│       └── users.html
+├── src 📁
+├── vendor 📁
+├── .htaccess
+├── .htpasswd
+└── index.html
+```
+# PHP und DB
+```bash
+wiwsall
+├── public
+├── src 📁
+│   ├── Controllers 📁
+│   │   ├── JWTHandler.php
+│   │   ├── TimeEntryController.php
+│   │   └── UserController.php
+│   ├── Database 📁
+│   │   └── /* database.sql
+│   ├── Models 📁
+│   │   ├── Database.php
+│   │   ├── TimeEntry.php
+│   │   ├── User.php
+│   ├── Routes 📁
+│   │    └── routes.php
+│   └── Views 📁
+├── vendor 📁
+├── .htaccess
+├── .htpasswd
+└── index.html
+```
 ## Verwendete / vorgeschlagene Technologien
 
 - JavaScript
