@@ -150,14 +150,38 @@ Registrieren
 | Request (Body) | `{ "email", "password", "firstName", "lastName", "timestamp" }` |
 | Beispiel | `{ "email": "user@example.com", "password": "passwort", "firstName": "Vorname", "lastName": "Nachname", "timestamp": "2026-02-03T12:00:00Z" }` |
 
-Events (Dashboard)
+All Events (admins & nutzer) (Dashboard)
 
 | Feld | Wert |
 |---|---|
 | Methode | GET |
-| Pfad | `/events` |
+| Pfad | `/events/all` |
 | Beschreibung | Liefert Events des eingeloggten Users (Token im Authorization Header) |
 | Antwort (Schema) | `[{ "name","notes","eid","start","end","signIn" }]` |
+
+Single Events (admins) (Dashboard)
+
+| Feld | Wert |
+|---|---|
+| Methode | GET |
+| Pfad | `/events/single` |
+| Beschreibung | Liefert Einzelne Eventoptionen |
+| Antwort (Schema) | `[{ "name","eid","start","end","signIn" }]` 
+Aufsetzen: POST | `[{ "name","eid","start","end" }]` 
+Bearbeiten: PUT | `[{ "name","eid","start","end" }]`
+Löschen: DELETE | `[{ "name","eid","start","end" }]`
+
+Single Events (nutzer) (Dashboard)
+
+| Feld | Wert |
+|---|---|
+| Methode | GET |
+| Pfad | `/events/single` |
+| Beschreibung | Liefert Einzelne Eventoptionen |
+| Antwort (Schema) | `[{ "name","eid","start","end","signIn" }]` 
+Teilnehmen: POST | `[{ "eid","signIn" }`
+VorzeitigAusloggen: POST | `[{ "eid","signOut" }`  
+
 
 Token‑Validierung
 
