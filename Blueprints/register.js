@@ -1,5 +1,5 @@
 var register = (function () {
-    var xhttp
+    var xhttp;
     
     var register = {};
     register.Registrierungsdaten = {
@@ -8,12 +8,21 @@ var register = (function () {
         Vorname: "",
         Nachname: ""
     };
-    register.RegistrierungsdatenJSON = JSON.stringify(register.Registrierungsdaten);
+
     register.finishedWithError = false;
     register.response = {};
-    register.userId = null;
     
-    register.createRegister = function () {
+    register.createRegister = function (inputData) {
+        xhttp = new XMLHttpRequest();
+
+
+        register.Registrierungsdaten.Email = inputData.email;
+        register.Registrierungsdaten.Passwort = inputData.password;
+        register.Registrierungsdaten.Vorname = inputData.firstName;
+        register.Registrierungsdaten.Nachname = inputData.lastName;
+
+        var RegistrierungsdatenJSON = JSON.stringify(register.Registrierungsdaten);
+
         xhttp.open("POST", "auth/register", true);
         xhttp.setRequestHeader("Content-Type", "application/json");
         
@@ -26,7 +35,7 @@ var register = (function () {
                         textStatus: xhttp.statusText
                     };
                     console.log("Registrierung erfolgreich:", register.response);
-                    register.takeResponse();
+                    register.getResponse();
                 } else {
                     register.finishedWithError = true;
                     register.response = {
@@ -37,10 +46,10 @@ var register = (function () {
                 }
             }
         };
-        xhttp.send(register.RegistrierungsdatenJSON);
+        xhttp.send(RegistrierungsdatenJSON);
     };
     
-    register.takeResponse = function () {
+    register.getResponse = function () {
         var responseData = JSON.parse(xhttp.responseText);
         register.userId = responseData.userId || responseData.id || null;
         console.log("Neuer User-ID:", register.userId);
