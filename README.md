@@ -126,80 +126,93 @@ Login
 
 | Feld | Wert |
 |---|---|
-| Methode | POST |
-| Pfad | `/auth/login` |
-| Request (Body) | `{ "email": "string", "password": "string" }` |
-| Erfolgreiche Antwort | `{ "token": "<jwt-token>" }` |
-| Hinweise | `POST /auth/failed-login` erhöht einen Failed‑Login‑Zähler: `{ "failed": 1 }` |
+| Titel | LOGIN |
+| Endpunkt | POST /auth/login |
+| Header | `{ "Content-Type": "application/json" }` |
+| Body (JSON) | `{ "email": "", "password": "" }` |
+| Beschreibung | Meldet Benutzer an und gibt JWT-Token zurück. user.js prüft Eingaben, ruft Request-Controller auf; Token wird im Controller sicher gespeichert (z.B. memory/localStorage) und bei Folge-Requests als Bearer gesetzt. UserController verifiziert Credentials, erzeugt JWT (JWTHandler) mit Ablaufzeit, antwortet JSON { token }. |
+| Response Codes | `200 OK` – Erfolgreich angemeldet<br>`400 Bad Request` – Ungültige Eingabedaten<br>`401 Unauthorized` – Falsche Email oder Passwort oder verified=false<br>`500 Internal Server Error` – Serverfehler<br>`429 optional nach mehreren failed-logins.` |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "token": "<jwt-token>", "users":{"active":""} }` |
+| Hinweise | `POST /auth/failed-login` erhöht einen Failed‑Login‑Zähler: `{ "num_failed_logins": 1 }` |
 
 Passwort vergessen
 
 | Feld | Wert |
 |---|---|
-| Methode | GET && PATCH |
-| Request (Anfrage) | `GET /auth/forgot` — Body: `{ "email": "user@example.com" }` |
-| Setzen neues Passwort | `PATCH /auth/forgot` — Body: `{ "newPassword": "neuesPasswort" }` |
+| Titel | PASSWORT VERGESSEN |
+| Endpunkt | GET /auth/forgot (Anfrage)<br>PATCH /auth/forgot (Neues Passwort setzen) |
+| Header | `{ "Content-Type": "application/json" }` |
+| Body (JSON) GET | `{ "email": "" }` |
+| (Email-Link) Body (JSON) PATCH | `{ "newPassword": "", "resetToken": "<jwt-token>" }` |
+| Beschreibung | Ermöglicht Benutzern das Zurücksetzen des Passworts.Frontend: user.js sendet E-Mail (GET) bzw. neues Passwort (PATCH) via Request-Controller; validiert Passwortregeln clientseitig.Backend: UserController initiiert Reset-Flow (Token/Code per Mail), setzt neues Passwort auf PATCH, invalidiert alte Tokens. Sicherheit: Rate-Limit/Throttle, keine Details leaken (immer generische Antwort) |
+| Response Codes | `200 OK` – Anfrage erfolgreich verarbeitet<br>`400 Bad Request` – Ungültige Eingabedaten<br>`404 Not Found` – Email nicht gefunden<br>`500 Internal Server Error` – Serverfehler |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"} }` |
 
 
 Registrieren
 
 | Feld | Wert |
 |---|---|
-| Methode | POST |
-| Pfad | `/auth/register` |
-| Request (Body) | `{ "email", "password", "firstName", "lastName", "timestamp" }` |
-| Beispiel | `{ "email": "user@example.com", "password": "passwort", "firstName": "Vorname", "lastName": "Nachname", "timestamp": "2026-02-03T12:00:00Z" }` |
+| Titel | REGISTRIERUNG |
+| Endpunkt | POST /auth/register |
+| Header | `{ "Content-Type": "application/json" }` |
+| Body (JSON) | `{ "email": "", "password": "", "first_name": "", "last_name": "", "timestamp": "" }` |
+| Beschreibung | Registriert neue Nutzer, Nutzer müssen sich dennoch erst anmelden, um Token zu erhalten |
+| Response Codes | `201 Created` – Erfolgreich erstellt<br>`400 Bad Request` – Passwort zu kurz/schwach oder formal ungültige Daten<br>`409 Conflict` – Email bereits vorhanden<br>`500 Internal Server Error` – Serverfehler |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"} }` |
 
 All Events (admins & nutzer) (Dashboard)
 
 | Feld | Wert |
 |---|---|
-| Methode | GET |
-| Pfad | `/events/all` |
-| Beschreibung | Liefert Events des eingeloggten Users (Token im Authorization Header) |
-| Antwort (Schema) | `[{ "name","notes","eid","start","end","signIn" }]` |
+| Titel | ALL EVENTS (DASHBOARD) |
+| Endpunkt | GET /events/all/info |
+| Header | `{ "Content-Type": "application/json", "Authorization": "Bearer <token>" }` |
+| Body (JSON) | Kein Body erforderlich |
+| Beschreibung | Liefert alle Events des eingeloggten Users (Token im Authorization Header) |
+| Response Codes | `200 OK` – Events erfolgreich abgerufen<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`500 Internal Server Error` – Serverfehler |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "events": [{ "name": "", "notes": "", "EID": "", "start": "", "end": "" }] }` |
 
 Single Events (admins) (Dashboard)
 
 | Feld | Wert |
 |---|---|
-| Methode | GET |
-| Pfad | `/events/single` |
-| Beschreibung | Liefert Einzelne Eventoptionen |
-| Antwort (Schema) | `[{ "name","eid","start","end","signIn" }]` 
-Aufsetzen: POST | `[{ "name","eid","start","end" }]` 
-Bearbeiten: PUT | `[{ "name","eid","start","end" }]`
-Löschen: DELETE | `[{ "name","eid","start","end" }]`
+| Titel | SINGLE EVENTS - ADMIN (DASHBOARD) |
+| Endpunkt | GET /events/single/info (Abrufen)<br>POST /events/single/erstellen (Aufsetzen)<br>PUT /events/single/bearbeiten (Bearbeiten)<br>DELETE /events/single/loeschen (Löschen) |
+| Header | `{ "Content-Type": "application/json", "Authorization": "Bearer <token>" }` |
+| Body (JSON) GET | Kein Body erforderlich |
+| Body (JSON) POST/PUT | `{ "name": "", "EID": "", "start": "", "end": "" }` |
+| Body (JSON) DELETE | `{ "EID": "" }` |
+| Beschreibung | Verwaltet einzelne Events (Admin-Funktionen: Erstellen, Bearbeiten, Löschen, Abrufen) |
+| Response Codes | `200 OK` – Erfolgreich abgerufen/bearbeitet<br>`201 Created` – Event erfolgreich erstellt<br>`400 Bad Request` – Ungültige Eingabedaten<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`403 Forbidden` – Keine Admin-Berechtigung<br>`404 Not Found` – Event nicht gefunden<br>`500 Internal Server Error` – Serverfehler |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "events": { "name": "", "EID": "", "start": "", "end": "", "sign_in": {"last_name":"","first_name":"","sign_in_time":"","sign_out_time":"", "notes":""} } }` |
 
 Single Events (nutzer) (Dashboard)
 
 | Feld | Wert |
 |---|---|
-| Methode | GET |
-| Pfad | `/events/single` |
-| Beschreibung | Liefert Einzelne Eventoptionen |
-| Antwort (Schema) | `[{ "name","eid","start","end","signIn" }]` 
-Teilnehmen: POST | `[{ "eid","signIn" }`
-VorzeitigAusloggen: POST | `[{ "eid","signOut" }`  
+| Titel | SINGLE EVENTS - NUTZER (DASHBOARD) |
+| Endpunkt | GET /events/single/info (Abrufen)<br>POST /events/single/Teilnahme (Teilnehmen/Ausloggen) |
+| Header | `{ "Content-Type": "application/json", "Authorization": "Bearer <token>" }` |
+| Body (JSON) GET | Kein Body erforderlich |
+| Body (JSON) POST (Teilnehmen) | `{ "EID": "", "sign_in_time": timestamp }` |
+| Body (JSON) POST (Ausloggen) | `{ "EID": "", "sign_out_time": timestamp }` |
+| Beschreibung | Ermöglicht Nutzern das Abrufen von Event Infos sowie Teilnahme oder vorzeitiges Ausloggen |
+| Response Codes | `200 OK` – Erfolgreich abgerufen/bearbeitet<br>`400 Bad Request` – Ungültige Eingabedaten<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`404 Not Found` – Event nicht gefunden<br>`500 Internal Server Error` – Serverfehler |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "events": { "name": "", "EID": "", "start": "", "end": "", "sign_in_time": "" } }` |
 
-
-Token‑Validierung
-
-| Feld | Wert |
-|---|---|
-| Methode | GET |
-| Pfad | `/auth/validate` (oder Middleware) |
-| Header | `Authorization: Bearer <token>` |
-| Antwort | `200 OK` (gültig) / `401 Unauthorized` (ungültig) |
 
 Kontoansicht (Users)
 
 | Feld | Wert |
 |---|---|
-| Methode | GET |
-| Pfad | `/users` |
-| Beschreibung | Übersicht der Nutzerattribute (sichtbar) |
-| Antwort (Beispiel) | `{ "uid","firstName","lastName","email","active","runFailed" }` |
+| Titel | KONTOANSICHT (USERS) |
+| Endpunkt | GET /users |
+| Header | `{ "Content-Type": "application/json", "Authorization": "Bearer <token>" }` |
+| Body (JSON) | Kein Body erforderlich |
+| Beschreibung | Liefert Übersicht der Nutzerattribute des eingeloggten Benutzers |
+| Response Codes | `200 OK` – Erfolgreich abgerufen<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`404 Not Found` – Benutzer nicht gefunden<br>`500 Internal Server Error` – Serverfehler |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "users": { "UID": "", "first_name": "", "last_name": "", "email": "", "active": "","verified": "", "num_failed_logins": "" } }` |
 
 
 ## Genaue Ziele (EPICS)
