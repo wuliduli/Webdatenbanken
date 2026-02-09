@@ -1,0 +1,62 @@
+﻿Funktionen – Beschreibung und Verantwortlichkeiten (aus Agent.md Vorgaben) (Stand:06.02.2026)
+
+Registrierung (POST /auth/register)
+- Zweck: neuen Nutzer anlegen; schreibt User- und ggf. Profil-Daten in DB.
+- Frontend: user.js validiert Pflichtfelder (email, password, firstName, lastName, timestamp) und schickt JSON via Request-Controller; keine UI-Logik im Controller.
+- Backend: UserController validiert serverseitig, hashed Passwort, legt Datensatz via User-Modell an, liefert JWT oder Bestätigung.
+- Fehler: 400 bei Validation, 500 bei DB; Log im Request-Controller.
+
+Login (POST /auth/login)
+- Zweck: Authentifizieren und JWT ausgeben.
+- Frontend: user.js prüft Eingaben, ruft Request-Controller auf; Token wird im Controller sicher gespeichert (z.B. memory/localStorage) und bei Folge-Requests als Bearer gesetzt.
+- Backend: UserController verifiziert Credentials, erzeugt JWT (JWTHandler) mit Ablaufzeit, antwortet JSON { token }.
+- Fehler: 401 bei falschen Daten, 429 optional nach mehreren failed-logins.
+
+Password vergessen (GET/PATCH /auth/forgot)
+- Zweck: Reset-Prozess starten und neues Passwort setzen.
+- Frontend: user.js sendet E-Mail (GET) bzw. neues Passwort (PATCH) via Request-Controller; validiert Passwortregeln clientseitig.
+- Backend: UserController initiiert Reset-Flow (Token/Code per Mail), setzt neues Passwort auf PATCH, invalidiert alte Tokens.
+- Sicherheit: Rate-Limit/Throttle, keine Details leaken (immer generische Antwort).
+
+Userinfo ändern (PATCH /users)
+- Zweck: Sichtbare Nutzerattribute aktualisieren (firstName, lastName, ggf. email wenn erlaubt).
+- Frontend: user.js sammelt Feldänderungen, validiert, sendet via Request-Controller mit Bearer JWT.
+- Backend: UserController autorisiert via JWT, prüft Felder, aktualisiert per User-Modell, gibt aktualisiertes Profil zurück.
+- Fehler: 400 Validation, 401/403 Auth, 409 bei Email-Konflikt.
+
+Event erstellen (POST /events/single)
+- Zweck: Neues Event anlegen (Admin).
+- Frontend: events/timeEntry Modul baut Event-Objekt (name, start, end, optional notes), sendet via Request-Controller.
+- Backend: TimeEntryController prüft Admin-Recht (JWT Claim/Role), validiert Daten, legt Event via TimeEntry-Modell an, liefert Event mit eid.
+- Fehler: 400 Validation, 403 fehlende Rechte.
+
+Event löschen (DELETE /events/single)
+- Zweck: Event entfernen (Admin).
+- Frontend: events/timeEntry Modul sendet eid im JSON/URL; Request-Controller mit JWT.
+- Backend: TimeEntryController autorisiert, löscht per Modell (soft delete empfohlen), antwortet Status/remaining info.
+- Fehler: 404 wenn nicht gefunden, 403 bei fehlender Rolle.
+
+Event ändern (PUT /events/single)
+- Zweck: Eventdaten aktualisieren (Admin).
+- Frontend: events/timeEntry Modul sendet geänderte Felder + eid; validiert Zeiten (start < end).
+- Backend: TimeEntryController autorisiert, validiert, updated per Modell, gibt aktualisiertes Event zurück.
+
+Sign-in erstellen (POST /events/single als Teilnahme)
+- Zweck: Nutzer zu Event anmelden (signIn true/ts).
+- Frontend: events/timeEntry Modul sendet { eid, signIn } via Request-Controller mit JWT.
+- Backend: TimeEntryController prüft Nutzerrechte (eingeloggt), validiert Eventzustand (z.B. offen), speichert Teilnahme/Signatur.
+- Antwort: Teilnahme-Datensatz oder Bestätigung.
+
+Sign-in löschen (POST /events/single mit signOut bzw. DELETE Teilnahme)
+- Zweck: Vorzeitiges Ausloggen/Abmelden.
+- Frontend: events/timeEntry Modul sendet { eid, signOut } oder ruft DELETE Teilnahme; nutzt JWT.
+- Backend: TimeEntryController vermerkt signOut-Zeit bzw. entfernt Teilnahme; prüft, dass Nutzer Besitzer der Teilnahme ist.
+- Fehler: 409 falls bereits abgemeldet, 404 falls Teilnahme fehlt.
+
+Sign-in ändern (PUT /events/single Teilnahme)
+- Zweck: Teilnahme-Daten korrigieren (z.B. signIn/signOut Zeit korrigieren, Notes).
+- Frontend: events/timeEntry Modul sendet Änderungen + Teilnahme-ID/eid; validiert Werte.
+- Backend: TimeEntryController autorisiert (Admin oder Owner), validiert Zeiten, passt Teilnahmeeintrag an.
+- Audit: Änderung loggen, optional alte Werte behalten.
+
+

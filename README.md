@@ -1,13 +1,36 @@
 # Webdatenbanken
 
+## Gliederung
+
+- [Kurzbeschreibung](#kurzbeschreibung)
+- [Aufgabenstellung](#aufgabenstellung)
+- [Architektur](#architektur)
+- [Verwendete / vorgeschlagene Technologien](#verwendete--vorgeschlagene-technologien)
+- [Nützliche Links / Lernmaterial](#nützliche-links--lernmaterial)
+- [Datenbankpasswörter & Anleitung](#datenbankpasswörter--anleitung)
+- [Gruppenaufbau](#gruppenaufbau)
+- [Aufbau REST-API](#aufbau-rest-api)
+  - [Authentifizierung & Nutzer — Endpunkte](#authentifizierung--nutzer--endpunkte-als-tabellen)
+    - [Login](#login)
+    - [Passwort vergessen](#Passwort-vergessen)
+    - [Registrieren](#registrieren)
+    - [All Events (admins & nutzer) (Dashboard)](#all-events-admins--nutzer-dashboard)
+    - [Single Events (admins) (Dashboard)](#single-events-admins-dashboard)
+    - [Single Events (nutzer) (Dashboard)](#single-events-nutzer-dashboard)
+    - [Kontoansicht (Users)](#kontoansicht-users)
+- [Genaue Ziele (EPICS)](#genaue-ziele-epics)
+- [User Stories](#user-stories)
+
+
+
 ## Kurzbeschreibung
 
 Ziel ist es, die Kommunikation zwischen unserer Gruppe (Gruppe‑FB4) und der REST‑API von Gruppe‑FB5 zu realisieren — Daten von API empfangen & senden und für Gruppe‑FB3 bereitstellen.
 
-![Projektübersicht](Bilder/Project.png)
-![Projektübersicht](Bilder/Project1.png)
-![Projektübersicht](Bilder/ERM-Modell.png)
-![Projektübersicht](Bilder/ajax-block-diagram1.jpg)
+![Projektübersicht](Dokumentation/Bilder/Project.png)
+![Projektübersicht](Dokumentation/Bilder/Project1.png)
+![Projektübersicht](Dokumentation/Bilder/ERM-Modell.png)
+![Projektübersicht](Dokumentation/Bilder/ajax-block-diagram1.jpg)
 
 ## Aufgabenstellung
 
@@ -16,7 +39,7 @@ Ziel ist es, die Kommunikation zwischen unserer Gruppe (Gruppe‑FB4) und der RE
 - Asynchrone Anfragen mit AJAX (jQuery)
 
 ## Architektur
-# Überblick
+## Überblick
 ```bash
 wiwsall
 ├── public 📁
@@ -87,15 +110,15 @@ wiwsall
 
 
 - AJAX mit JavaScript (Übersicht): https://www.w3schools.com/js/js_ajax_http.asp
-![Projektübersicht](Bilder/AJAX1.png)
-![Projektübersicht](Bilder/AJAX2.png)
+![Projektübersicht](Dokumentation/Bilder/AJAX1.png)
+![Projektübersicht](Dokumentation/Bilder/AJAX2.png)
 
 Zusätzlich: Lernstoff aus den Vorlesungsfolien "Theorie Session – Kapitel 4: Dynamische Webinhalte und AJAX" oder Ordner: "ajax_jquery_json_Beispiel".
 
 - JSON Web Token (Artikel): https://www.geeksforgeeks.org/web-tech/json-web-token-jwt/
 - RESTful HTTP Methods (Erklärung): https://restfulapi.net/http-methods/
-![Projektübersicht](Bilder/CRUID.png)
-![Projektübersicht](Bilder/httpCodes.png)
+![Projektübersicht](Dokumentation/Bilder/CRUID.png)
+![Projektübersicht](Dokumentation/Bilder/httpCodes.png)
 
 
 ## Datenbankpasswörter & Anleitung
@@ -104,8 +127,8 @@ Zusätzlich: Lernstoff aus den Vorlesungsfolien "Theorie Session – Kapitel 4: 
 - FTP: 23i_dev_myftpox
 - Path: 23i_dev_mypathox
 
-![Projektübersicht](Bilder/Einrichtung1.png)
-![Projektübersicht](Bilder/Einrichtung2.png)
+![Projektübersicht](Dokumentation/Bilder/Einrichtung1.png)
+![Projektübersicht](Dokumentation/Bilder/Einrichtung2.png)
 
 ## Gruppenaufbau
 - Michi (Produktowner)
@@ -121,8 +144,8 @@ Rahmenbedingungen
 - Token‑basierte Authentifizierung (JWT) für geschützte Endpunkte.
 
 ### Authentifizierung & Nutzer — Endpunkte (als Tabellen)
-
-Login
+(Stand:09.02.2026)
+#### Login
 
 | Feld | Wert |
 |---|---|
@@ -135,7 +158,7 @@ Login
 | Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "token": "<jwt-token>", "users":{"active":""} }` |
 | Hinweise | `POST /auth/failed-login` erhöht einen Failed‑Login‑Zähler: `{ "num_failed_logins": 1 }` |
 
-Passwort vergessen
+#### Passwort vergessen
 
 | Feld | Wert |
 |---|---|
@@ -149,7 +172,7 @@ Passwort vergessen
 | Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"} }` |
 
 
-Registrieren
+#### Registrieren
 
 | Feld | Wert |
 |---|---|
@@ -161,7 +184,7 @@ Registrieren
 | Response Codes | `201 Created` – Erfolgreich erstellt<br>`400 Bad Request` – Passwort zu kurz/schwach oder formal ungültige Daten<br>`409 Conflict` – Email bereits vorhanden<br>`500 Internal Server Error` – Serverfehler |
 | Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"} }` |
 
-All Events (admins & nutzer) (Dashboard)
+#### All Events (admins & nutzer) (Dashboard)
 
 | Feld | Wert |
 |---|---|
@@ -173,7 +196,7 @@ All Events (admins & nutzer) (Dashboard)
 | Response Codes | `200 OK` – Events erfolgreich abgerufen<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`500 Internal Server Error` – Serverfehler |
 | Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "events": [{ "name": "", "notes": "", "EID": "", "start": "", "end": "" }] }` |
 
-Single Events (admins) (Dashboard)
+#### Single Events (admins) (Dashboard)
 
 | Feld | Wert |
 |---|---|
@@ -187,7 +210,7 @@ Single Events (admins) (Dashboard)
 | Response Codes | `200 OK` – Erfolgreich abgerufen/bearbeitet<br>`201 Created` – Event erfolgreich erstellt<br>`400 Bad Request` – Ungültige Eingabedaten<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`403 Forbidden` – Keine Admin-Berechtigung<br>`404 Not Found` – Event nicht gefunden<br>`500 Internal Server Error` – Serverfehler |
 | Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "events": { "name": "", "EID": "", "start": "", "end": "", "sign_in": {"last_name":"","first_name":"","sign_in_time":"","sign_out_time":"", "notes":""} } }` |
 
-Single Events (nutzer) (Dashboard)
+#### Single Events (nutzer) (Dashboard)
 
 | Feld | Wert |
 |---|---|
@@ -202,7 +225,7 @@ Single Events (nutzer) (Dashboard)
 | Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "events": { "name": "", "EID": "", "start": "", "end": "", "sign_in_time": "" } }` |
 
 
-Kontoansicht (Users)
+#### Kontoansicht (Users)
 
 | Feld | Wert |
 |---|---|
@@ -227,3 +250,13 @@ Kontoansicht (Users)
 - Implementierung
 - Abstimmung mit FB3 & FB5
 - Präsentation
+
+## User Stories
+### Miro Story Board
+https://miro.com/welcomeonboard/YjBXYWh2TFE5d01hbnYvWThnWmV5QXdHR0lrQzVJRXVBT0NkcnUvZEtlR2IwZHlKVHd6amVnaHR1OHpIZ2R6OVZVam0vYzdmWDFSKzI0ejBtNGFiWVVvUWRrck5na1RmVkczOVZTTGpEZE4vVGx0T2dTdHpOWXhMSFY2bk1FK1RBd044SHFHaVlWYWk0d3NxeHNmeG9BPT0hdjE=?share_link_id=444329631435
+
+| Nr. | Story-ID | Titel | Beschreibung | Akzeptanz Kriterien | Priorität | User Story |
+|-----|----------|-------|--------------|-----------|--------|--------|
+| 1 | AUTH-1 | JWT Implementierung | Erstellung + Validierung | Hoch | ____ |
+
+
