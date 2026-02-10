@@ -136,6 +136,18 @@ Zusätzlich: Lernstoff aus den Vorlesungsfolien "Theorie Session – Kapitel 4: 
 - Tim & Andy (Programmierung haupt.)
 - Harry, Niels, Lukas (Testing & Qualitätssicherung - Präsi?)
 - Alle Mitglieder können gerne bei der Programmierung helfen 😊
+### Repo Zugriff
+Extern:
+- Rashad (FB5) "rashad.mohammad@ba-rm.de"
+- Julian (FB5) "julscheich@gmail.com"
+Intern (FB4):
+- Tim "tim.zimmermann2411@gmail.com"
+- Andy "andylh0407@gmail.com"
+- Niels "Niels-Christian.bohr@web.de"
+- Michael "mich.egner99@outlook.de"
+- Lukas S. "lukas.scharnagl.mail@gmail.com"
+- Harry "hary.hohmann@yahoo.com"
+- Jonathan "jonathankross611@gmail.com"
 ## Aufbau REST-API
 
 Rahmenbedingungen
