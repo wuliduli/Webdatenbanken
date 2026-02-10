@@ -139,7 +139,8 @@ Zusätzlich: Lernstoff aus den Vorlesungsfolien "Theorie Session – Kapitel 4: 
 ### Repo Zugriff
 Extern:
 - Rashad (FB5) "rashad.mohammad@ba-rm.de"
-- Julian (FB5) "julscheich@gmail.com"
+- Julian (FB5) "julscheich@gmail.com"<br>
+
 Intern (FB4):
 - Tim "tim.zimmermann2411@gmail.com"
 - Andy "andylh0407@gmail.com"
