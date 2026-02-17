@@ -13,15 +13,16 @@ var register = (function () {
     register.response = {};
     
     register.createRegister = function (inputData) {
-        xhttp = new XMLHttpRequest();
-
-
+        //Eingabedaten in Objekt speichern und in JSON umwandeln
         register.Registrierungsdaten.Email = inputData.email;
         register.Registrierungsdaten.Passwort = inputData.password;
         register.Registrierungsdaten.Vorname = inputData.firstName;
         register.Registrierungsdaten.Nachname = inputData.lastName;
 
         var RegistrierungsdatenJSON = JSON.stringify(register.Registrierungsdaten);
+        //POST Request mit AJAX senden und Antwort verarbeiten
+
+        xhttp = new XMLHttpRequest();
 
         xhttp.open("POST", "auth/register", true);
         xhttp.setRequestHeader("Content-Type", "application/json");

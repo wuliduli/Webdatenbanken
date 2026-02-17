@@ -12,7 +12,11 @@ token = JWT
 // server kommunikation
 tokenCheck.sendToken = function () {
         xhttp.open("POST", "auth/validation", true);
-        if (xhttp.readystate === 4 && xhttp.status === 200) {success_func()}
+
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.setRequestHeader("Authorization", "Bearer " + token);
+        
+        if (xhttp.readyState === 4 && xhttp.status === 200) {success_func()}
         else if (xhttp.status !== 200) {error_func()}
         xhttp.send(token);
         function success_func () {

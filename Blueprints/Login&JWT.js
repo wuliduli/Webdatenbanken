@@ -26,12 +26,13 @@ var login = (function () {
         Email: "",
         Passwort: "",
     };
-    login.AnmeldedatenJSON = JSON.stringify(login.Anmeldedaten);
+
    
     login.finishedWithError = false;
     login.error = {};
 	// JWT variables
     login.JWT = {};
+
 
     //************************************************
     // login functions
@@ -42,12 +43,35 @@ var login = (function () {
 
     // post login data with ajax and get JWT
 
-	login.createLogin = function () {
+	login.createLogin = function (inputData) {
+// Validierung der Eingabedaten
+    if (!inputData || !inputData.email || !inputData.password) {
+      login.finishedWithError = true;
+      login.error = {
+        status: 0,
+        textStatus: "Invalid Input",
+        message: "Email and password are required."// Das habe ich einfach hier erstmal als Orientierung gestellt.
+      };
+      return;
+    }
+        // Anmeldedaten in JSON-Format setzen
+        login.Anmeldedaten.Email = inputData.email;
+        login.Anmeldedaten.Passwort = inputData.password;
+
+
+        var payloadJSON = JSON.stringify(login.Anmeldedaten);
+        
+        //POST Request mit AJAX senden und Antwort verarbeiten
+        var xhttp = new XMLHttpRequest();
 
         xhttp.open("POST", "auth/login", true);
-        if (xhttp.readystate === 4 && xhttp.status === 200) {success_func()}
+        xhttp.setRequestHeader("Content-Type", "application/json");
+
+        if (xhttp.readyState === 4 && xhttp.status === 200) {success_func()}
         else if (xhttp.status !== 200) {error_func()}
-        xhttp.send(login.AnmeldedatenJSON);
+        xhttp.send(payloadJSON);
+
+        // Success-Funktion definieren
         function success_func () {
             login.finishedWithError = false;
             login.response = {
@@ -57,21 +81,25 @@ var login = (function () {
             println(login.response);
             login.takeJWT();
         };
-        function error_func () {
+        //Error-Funktion definieren
+        function error_func () {    
             login.finishedWithError = true;
             login.response = {
                 status: xhttp.status,
                 textStatus: xhttp.statusText,
             };
             println(login.response);
-    };
+        };
     return login;
 }
-    login.takeJWT = function () {
-        var JWT = JSON.parse(xhttp.responseText);
-        println(JWT);
+    login.takeJWT = function (responseData) {
+        var responseData = JSON.parse(responseData);
+        login.JWT = responseData.token; // Hier wird angenommen, dass das JWT im Feld "token" der Antwort enthalten ist. Je nach API kann dies variieren.
+        println(login.JWT);
     }
-();})
+
+return login;
+}());
 
 /* 
 1.LoginDaten in JSON-Format setzen
