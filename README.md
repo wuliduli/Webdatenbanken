@@ -255,6 +255,9 @@ Rahmenbedingungen
 - Blueprints (Vorarbeit):
     - JWT → erstellen + Validierung 
     - Qualitätssicherrung: Funktionale Tests, (Funktioniert der Login/Registrieren/Logout,Passwort resetten), JSON-Struktur Annahme (JWT) Tests, Tests auf technische Verbindungsfehler und Logische Verbindungsfehler(pw nicht richtig etc (nach überreichung der JSON))
+    Testingdateien: 
+    Testkonzept: https://1drv.ms/x/c/23431215959db829/IQCoGb83Mt5NTbYQqJuhcLVCAc7q-quy-L7dxMtV3vmtkq0?e=5d7lFD
+    Tests examples: https://1drv.ms/w/c/23431215959db829/IQCSRHqR7R_HRbzOFqR1QFMoAR3vWtz5i4jBYLfdD2OIJlw?e=CDHQjQ
     
     - Login
     - Registrieren
