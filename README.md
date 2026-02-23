@@ -18,6 +18,8 @@
     - [Single Events (admins) (Dashboard)](#single-events-admins-dashboard)
     - [Single Events (nutzer) (Dashboard)](#single-events-nutzer-dashboard)
     - [Kontoansicht (Users)](#kontoansicht-users)
+    - [Nutzer aktualisieren (Update User)](#nutzer-aktualisieren-update-user)
+    - [Nutzer löschen (Delete User)](#nutzer-löschen-delete-user)
 - [Genaue Ziele (EPICS)](#genaue-ziele-epics)
 - [User Stories](#user-stories)
 
@@ -249,6 +251,30 @@ Rahmenbedingungen
 | Beschreibung | Liefert Übersicht der Nutzerattribute des eingeloggten Benutzers |
 | Response Codes | `200 OK` – Erfolgreich abgerufen<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`404 Not Found` – Benutzer nicht gefunden<br>`500 Internal Server Error` – Serverfehler |
 | Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"}, "users": { "UID": "", "first_name": "", "last_name": "", "email": "", "active": "","verified": "", "num_failed_logins": "" } }` |
+
+#### Nutzer aktualisieren (Update User)
+
+| Feld | Wert |
+|---|---|
+| Titel | NUTZER AKTUALISIEREN (UPDATE USER) |
+| Endpunkt | PUT /users |
+| Header | `{ "Content-Type": "application/json", "Authorization": "Bearer <token>" }` |
+| Body (JSON) | `{ "first_name": "", "last_name": "", "email": "", "password": "" }` |
+| Beschreibung | Aktualisiert die Profildaten des eingeloggten Benutzers. Es müssen nur die zu ändernden Felder im Body übergeben werden. Die Identifikation erfolgt über das JWT-Token im Authorization Header. |
+| Response Codes | `200 OK` – Nutzerdaten erfolgreich aktualisiert<br>`400 Bad Request` – Ungültige Eingabedaten (z.B. Passwort zu kurz)<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`404 Not Found` – Benutzer nicht gefunden<br>`409 Conflict` – Email bereits vergeben<br>`500 Internal Server Error` – Serverfehler |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"} }` |
+
+#### Nutzer löschen (Delete User)
+
+| Feld | Wert |
+|---|---|
+| Titel | NUTZER LÖSCHEN (DELETE USER) |
+| Endpunkt | DELETE /users |
+| Header | `{ "Content-Type": "application/json", "Authorization": "Bearer <token>" }` |
+| Body (JSON) | Kein Body erforderlich |
+| Beschreibung | Löscht das Konto des eingeloggten Benutzers. Die Identifikation erfolgt über das JWT-Token im Authorization Header. Nach erfolgreicher Löschung wird das Token ungültig. |
+| Response Codes | `200 OK` – Benutzerkonto erfolgreich gelöscht<br>`401 Unauthorized` – Kein oder ungültiges Token<br>`404 Not Found` – Benutzer nicht gefunden<br>`500 Internal Server Error` – Serverfehler |
+| Antwort Body (JSON) | `{ server_communication:{"code": "$code", "response": "$responseName", "message": "$responseMessage"} }` |
 
 
 ## Genaue Ziele (EPICS)

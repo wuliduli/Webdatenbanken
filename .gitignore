@@ -1,0 +1,10 @@
+# Ignore everything
+*
+
+# Allow these
+!.gitignore
+!README.md
+!Blueprints/
+!Blueprints/**
+!Dokumentation/
+!Dokumentation/**
