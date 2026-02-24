@@ -1,0 +1,54 @@
+openapi: 3.0.0
+info:
+  title: Arbeitszeiterfassung API
+  description: Eine REST-API für die Arbeitszeiterfassung in Unternehmen.
+  version: 1.0.0
+servers:
+  - url: http://localhost
+    description: Lokale Entwicklungsumgebung
+
+paths:
+  /users:
+    get:
+      summary: Alle Mitarbeiter abrufen
+      responses:
+        '200':
+          description: Erfolgreiche Antwort
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      summary: Mitarbeiter nach ID abrufen
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Erfolgreiche Antwort
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Mitarbeiter nicht gefunden
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+

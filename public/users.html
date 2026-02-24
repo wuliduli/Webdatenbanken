@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benutzerverwaltung</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <style>
+    .action-buttons button {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="timeEntries.html">Zeiterfassung</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="users.html"><b>Benutzerverwaltung</b></a>
+      </li>
+    </ul>
+    <button type="button" class="btn btn-primary logout-btn" id="LogoutBtnUsers" >Logout</button>
+    <a class="navbar-brand ms-3">
+      <img src="img/logo.png" alt="Logo" width="76" height="44" class="d-inline-block align-text-top">
+    </a>
+   <span class="mb-4"> </span>    
+</nav>
+  
+  <div class="container mt-5">
+    <h1 class="text-center">Benutzerverwaltung</h1>
+  </div>
+
+  <div class="container mt-5 pt-5 mb-5">
+    <div class="mb-4">
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>UID</th>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>E-Mail</th>
+            <th>Bemerkung</th>
+            <th>Aktivität</th>
+            <th>Pflichtzeit</th>
+			    <th>Verifiziert</th>
+			    <th>Erfasst am</th>
+		    	<th>Aktion</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody">
+          <tr data-tid="1">
+            <td class="action-buttons">
+              <button type="button" class="btn btn-primary btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#editModal">Bearbeiten</button>
+              <button type="button" class="btn btn-danger btn-sm deleteBtn" data-bs-toggle="modal" data-bs-target="#deleteModal">Löschen</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="editForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Benutzer bearbeiten</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="editUID" class="form-label">UID:</label>
+              <input type="text" class="form-control" id="editUID" name="editUID" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="editFirstname" class="form-label">Vorname:</label>
+              <input type="text" class="form-control" id="editFirstname" name="editFirstname">
+            </div>
+            <div class="mb-3">
+              <label for="editLastname" class="form-label">Nachname:</label>
+              <input type="text" class="form-control" id="editLastname" name="editLastname">
+            </div>
+            <div class="mb-3">
+              <label for="editEmail" class="form-label">E-Mail:</label>
+              <input type="text" class="form-control" id="editEmail" name="editEmail">
+            </div>
+            <div class="mb-3">
+              <label for="editNotes" class="form-label">Bemerkung:</label>
+              <input type="text" class="form-control" id="editNotes" name="editNotes">
+            </div>
+            <div class="mb-3">
+              <label for="editActive" class="form-label">Aktivität:</label>
+              <input type="text" class="form-control" id="editActive" name="editActive">
+            </div>
+			<div class="mb-3">
+              <label for="editMandtime" class="form-label">Pflichtzeit:</label>
+              <input type="text" class="form-control" id="editMandtime" name="editMandtime">
+            </div>
+			<div class="mb-3">
+              <label for="editActive" class="form-label">Verifizert:</label>
+              <input type="text" class="form-control" id="editVerified" name="editActive">
+            </div>
+			<div class="mb-3">
+              <label for="editCreatedAt" class="form-label">Erfasst am:</label>
+              <input type="text" class="form-control" id="editCreatedAt" name="editCreatedAt">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Speichern</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Benutzer löschen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+        </div>
+        <div class="modal-body">
+          <p id="deleteText">Möchten Sie diesen Eintrag wirklich löschen?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" id="confirmDelete">JA</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="cancelDelete">NEIN</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-light text-center fixed-bottom py-2">
+    <div class="container">
+        <span>Beispiel-Implementierung einer MVC Web-Applikation - Studiengang WI Berufsakademie Rhein-Main</span>
+    </div>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+
+    const deleteBtns = document.querySelectorAll('.deleteBtn');
+    deleteBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const row = btn.closest('tr');
+        $('#deleteText').innerText = "Möchten Sie den Eintrag mit TID " + row.cells[0].innerText + " wirklich löschen?";
+      });
+    });
+    
+    $('#confirmDelete').addEventListener('click', function() {
+      const deleteModal = bootstrap.Modal.getInstance($('#deleteModal'));
+      deleteModal.hide();
+      alert("Der Benutzer-Eintrag wurde gelöscht.");
+    });
+  </script>
+  
+  <!-- script src="js/app.js"></script! -->
+  <script src="js/user.js"></script>
+  <!-- script src="js/session.js"></script -->
+</body>
+</html>
