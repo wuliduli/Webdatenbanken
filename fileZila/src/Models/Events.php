@@ -7,6 +7,7 @@ use App\Models\Database;
 
 class Event
 {
+    private static string $tableName = "t_events";
     //
     // CRUD - Create
     //
@@ -14,7 +15,7 @@ class Event
     {
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("INSERT INTO events (name, start, end) 
+            $stmt = $db->prepare("INSERT INTO " . self::$tableName . " (name, start, end) 
         VALUES (:name, :start, :end)");
 
             $stmt->execute([
@@ -52,7 +53,7 @@ class Event
     public static function getAll(): array
     {
         $db = Database::getConnection();
-        $stmt = $db->query("SELECT * FROM events");
+        $stmt = $db->query("SELECT * FROM " . self::$tableName);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -62,7 +63,7 @@ class Event
     public static function getById(int $EID): ?array
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare("SELECT * FROM events WHERE EID = :EID");
+        $stmt = $db->prepare("SELECT * FROM " . self::$tableName . " WHERE EID = :EID");
         $stmt->execute([':EID' => $EID]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -74,7 +75,7 @@ class Event
     {
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("UPDATE events 
+            $stmt = $db->prepare("UPDATE " . self::$tableName . " 
             SET name = :name, start = :start, end = :end WHERE EID = :EID");
             $stmt->execute([
                 ':name' => $data['name'],
@@ -110,7 +111,7 @@ class Event
     public static function delete(int $EID): void
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare("DELETE FROM events WHERE EID = :EID");
+        $stmt = $db->prepare("DELETE FROM " . self::$tableName . " WHERE EID = :EID");
         $stmt->execute([':EID' => $EID]);
     }
 }

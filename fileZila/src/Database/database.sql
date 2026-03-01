@@ -16,11 +16,11 @@ START TRANSACTION;
 SET
   FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS `sign_in`;
+DROP TABLE IF EXISTS `t_sign_in`;
 
-DROP TABLE IF EXISTS `events`;
+DROP TABLE IF EXISTS `t_events`;
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `t_users`;
 
 SET
   FOREIGN_KEY_CHECKS = 1;
@@ -44,14 +44,14 @@ SET
 -- Datenbank: `d0453b06`
 --
 -- --------------------------------------------------------
-CREATE TABLE events (
+CREATE TABLE t_events (
   EID INT NOT NULL,
   name VARCHAR(255) NOT NULL,
   start DATETIME NOT NULL,
 end DATETIME NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
-CREATE TABLE users (
+CREATE TABLE t_users (
   UID INT NOT NULL,
   first_name VARCHAR(255) NOT NULL,
   last_name VARCHAR(255) NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE users (
   create_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
-CREATE TABLE sign_in (
+CREATE TABLE t_sign_in (
   EID INT NOT NULL,
   UID INT NOT NULL,
   notes TEXT,
@@ -73,41 +73,41 @@ CREATE TABLE sign_in (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 ALTER TABLE
-  `events`
+  `t_events`
 ADD
   PRIMARY KEY (`EID`);
 
 ALTER TABLE
-  `users`
+  `t_users`
 ADD
   PRIMARY KEY (`UID`),
 ADD
   UNIQUE KEY `email` (`email`);
 
 ALTER TABLE
-  `sign_in`
+  `t_sign_in`
 ADD
   PRIMARY KEY (`EID`, `UID`);
 
 ALTER TABLE
-  `events`
+  `t_events`
 MODIFY
   `EID` INT NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE
-  `users`
+  `t_users`
 MODIFY
   `UID` INT NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE
-  `sign_in`
+  `t_sign_in`
 ADD
-  CONSTRAINT `sign_in_ibfk_1` FOREIGN KEY (`EID`) REFERENCES `events` (`EID`) ON DELETE CASCADE,
+  CONSTRAINT `sign_in_ibfk_1` FOREIGN KEY (`EID`) REFERENCES `t_events` (`EID`) ON DELETE CASCADE,
 ADD
-  CONSTRAINT `sign_in_ibfk_2` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`) ON DELETE CASCADE;
+  CONSTRAINT `sign_in_ibfk_2` FOREIGN KEY (`UID`) REFERENCES `t_users` (`UID`) ON DELETE CASCADE;
 
 INSERT INTO
-  `users` (
+  `t_users` (
     first_name,
     last_name,
     email,
@@ -122,7 +122,7 @@ VALUES
     'Max',
     'Mustermann',
     'max.mustermann@example.com',
-    '$2y$10$examplehash1',
+    '$2y$10$ah4PIanLby8FihiRlVVakuV9layu4UcljRTAWuIU9EU5fi5Ymb5ke',
     1,
     TRUE,
     TRUE,
@@ -132,7 +132,7 @@ VALUES
     'Anna',
     'Schmidt',
     'anna.schmidt@example.com',
-    '$2y$10$examplehash2',
+    '$2y$10$ah4PIanLby8FihiRlVVakuV9layu4UcljRTAWuIU9EU5fi5Ymb5ke',
     1,
     TRUE,
     TRUE,
@@ -142,7 +142,7 @@ VALUES
     'Lukas',
     'Weber',
     'lukas.weber@example.com',
-    '$2y$10$examplehash3',
+    '$2y$10$ah4PIanLby8FihiRlVVakuV9layu4UcljRTAWuIU9EU5fi5Ymb5ke',
     1,
     TRUE,
     TRUE,
@@ -152,7 +152,7 @@ VALUES
     'Sophie',
     'Meyer',
     'sophie.meyer@example.com',
-    '$2y$10$examplehash4',
+    '$2y$10$ah4PIanLby8FihiRlVVakuV9layu4UcljRTAWuIU9EU5fi5Ymb5ke',
     1,
     TRUE,
     TRUE,
@@ -162,7 +162,7 @@ VALUES
     'Tom',
     'Becker',
     'tom.becker@example.com',
-    '$2y$10$examplehash5',
+    '$2y$10$ah4PIanLby8FihiRlVVakuV9layu4UcljRTAWuIU9EU5fi5Ymb5ke',
     1,
     TRUE,
     TRUE,
@@ -170,7 +170,7 @@ VALUES
   );
 
 INSERT INTO
-  `events` (name, start,end
+  `t_events` (name, start,end
 )
 VALUES
   (

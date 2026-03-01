@@ -33,6 +33,10 @@ var m_data_get = (function () {
       window.timeEntry = {};
     }
 
+    if (typeof window.eventsData === "undefined") {
+      window.eventsData = {};
+    }
+
     if (!Array.isArray(user.data)) {
       user.data = [];
     }
@@ -181,7 +185,23 @@ var m_data_get = (function () {
       },
     });
   };
-
+  m_data_get.getEvents = function(do_next_func) {
+    // Platzhalter
+    do_next_func();
+  };
+  m_data_get.getEventsForDropdown = function(do_next_func) {
+    // Platzhalter
+    do_next_func();
+  };
+  m_data_get.joinEvent = function(EID, do_next_func) {
+    // Platzhalter
+    do_next_func();
+  };
+  m_data_get.leaveEvent = function(leave_json, do_next_func) {
+    // Platzhalter
+    // leave_json = {EID: selectedId, notes: leaveNotes}
+    do_next_func();
+  };
   m_data_get.getTimeEntries = function (do_next_func) {
     m_data_get.ensureState();
 

@@ -20,7 +20,7 @@ var getNutzerKonto = (function () {
     };
 
     // Nutzerkonto-Daten vom Server abrufen
-    getNutzerKonto.fetchKonto = function () {
+    getNutzerKonto.getNutzer = function () {
 
         var token = sessionStorage.getItem("JWTToken");
         if (!token) {

@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventmanager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .action-buttons button {
+          margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="timeEntries.html">Eventeinbuchung</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="eventmanager.html"><b>Eventmanager</b></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="users.html">Benutzerverwaltung</a>
+        </li>
+    </ul>
+    <button type="button" class="btn btn-primary logout-btn" id="LogoutBtnEvents" >Logout</button>
+    <a class="navbar-brand ms-3">
+        <img src="img/logo.png" alt="Logo" width="76" height="44" class="d-inline-block align-text-top">
+    </a>
+</nav>
+
+<div class="container mt-5">
+    <h1 class="text-center">Eventmanager</h1>
+</div>
+
+<div class="container mt-5 pt-5 mb-5">
+    <div class="mb-4">
+        <h2>Eventmanager:</h2>
+    </div>
+
+    <div class="mb-4">
+        <table class="table table-bordered">
+            <thead class="table-light">
+            <tr>
+                <th>Event-ID</th>
+                <th>Event-Name</th>
+                <th>Event-Beginn</th>
+                <th>Event-Ende</th>
+                <th class="text-center">Aktionen</th>
+            </tr>
+            </thead>
+            <tbody id="eventmanager-tbody">
+            <tr>
+                <td>EV-2001</td>
+                <td>Jahreshauptversammlung</td>
+                <td>2024-05-15 10:00</td>
+                <td>2024-05-15 14:00</td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-primary btn-sm me-1 editEventBtn" data-bs-toggle="modal" data-bs-target="#editEventModal">Bearbeiten</button>
+                    <button type="button" class="btn btn-danger btn-sm deleteEventBtn" data-bs-toggle="modal" data-bs-target="#deleteEventModal">Löschen</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mb-4">
+        <button type="button" class="btn btn-primary me-2 shadow-sm" id="createEventBtn" data-bs-toggle="modal" data-bs-target="#createModal">Event erstellen</button>
+    </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-blue">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Neues Event erstellen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-3" placeholder="Event Name">
+                <input type="datetime-local" class="form-control mb-3" placeholder="Beginn">
+                <input type="datetime-local" class="form-control" placeholder="Ende">
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary">Erstellen</button>
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editEventModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-blue">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Event bearbeiten</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-3" id="editEventName" value="Jahreshauptversammlung">
+                <input type="datetime-local" class="form-control mb-3" id="editEventStart">
+                <input type="datetime-local" class="form-control" id="editEventEnd">
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary">Speichern</button>
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteEventModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger shadow-lg">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Event löschen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Möchten Sie dieses Event wirklich unwiderruflich löschen?</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-danger">Löschen</button>
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="bg-light text-center fixed-bottom py-2">
+    <div class="container">
+        <span>Beispiel-Implementierung einer MVC Web-Applikation - Studiengang WI Berufsakademie Rhein-Main</span>
+    </div>
+</footer>
+
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Statische Testdaten für die Events im Dropdown
+        const testEvents = [
+            { id: "EV-2024-01", name: "Projekt-Kickoff" },
+            { id: "EV-2024-02", name: "Jahreshauptversammlung" },
+            { id: "EV-2024-03", name: "Workshop: UI/UX Design" }
+        ];
+
+        // Dropdowns initial mit Testdaten befüllen
+        const $joinDropdown = $('#event-join-dp');
+        const $leaveDropdown = $('#event-leave-dp');
+
+        $joinDropdown.empty().append('<option selected disabled>Event wählen...</option>');
+        testEvents.forEach(ev => {
+            $joinDropdown.append(`<option value="${ev.id}">${ev.name}</option>`);
+        });
+
+        // 1. FUNKTION: EVENT BEITRETEN
+        $('#joinModal .btn-primary').on('click', function() {
+            const selectedId = $joinDropdown.val();
+            const selectedName = $joinDropdown.find('option:selected').text();
+            const now = new Date().toLocaleString('de-DE');
+
+            if (!selectedId) {
+                alert("Bitte wählen Sie ein Event aus!");
+                return;
+            }
+
+            // Neue Zeile in die Tabelle einfügen (Statische Simulation)
+            const newRow = `
+                <tr data-event-id="${selectedId}">
+                    <td>${selectedId}</td>
+                    <td>USER-TEST-01</td>
+                    <td>${now}</td>
+                    <td>-</td>
+                    <td class="text-success">Ja</td>
+                    <td class="leave-cell">-</td>
+                    <td>${selectedName}</td>
+                </tr>
+            `;
+
+            $('#events-tbody').append(newRow);
+
+            // Das beigetretene Event zum "Verlassen"-Dropdown hinzufügen
+            $leaveDropdown.append(`<option value="${selectedId}">${selectedName}</option>`);
+
+            // Modal schließen
+            bootstrap.Modal.getInstance(document.getElementById('joinModal')).hide();
+            console.log(`Erfolgreich angemeldet bei: ${selectedName} (${selectedId})`);
+        });
+
+        // 2. FUNKTION: EVENT FRÜHZEITIG VERLASSEN
+        $('#leaveModal .btn-warning').on('click', function() {
+            const selectedId = $leaveDropdown.val();
+            const reason = $('#leaveModal textarea').val();
+            const now = new Date().toLocaleString('de-DE');
+
+            if (!selectedId || selectedId === "Aktuelles Event...") {
+                alert("Bitte wählen Sie das Event aus, das Sie verlassen möchten!");
+                return;
+            }
+
+            if (!reason.trim()) {
+                alert("Bitte geben Sie einen Grund an!");
+                return;
+            }
+
+            // Suche die Zeile in der Tabelle und aktualisiere sie
+            const $row = $(`#events-tbody tr[data-event-id="${selectedId}"]`);
+            if ($row.length > 0) {
+                $row.find('td:nth-child(4)').text(now); // Event-Ende Spalte
+                $row.find('.leave-cell').text("Ja");     // Verlassen Spalte
+                $row.find('td:nth-child(7)').append(` <br><i>(Grund: ${reason})</i>`);
+
+                // Aus dem Verlassen-Dropdown entfernen
+                $leaveDropdown.find(`option[value="${selectedId}"]`).remove();
+
+                // Modal schließen & Formular leeren
+                bootstrap.Modal.getInstance(document.getElementById('leaveModal')).hide();
+                $('#leaveModal textarea').val('');
+                console.log(`Event ${selectedId} wurde verlassen. Grund: ${reason}`);
+            }
+        });
+    });
+</script>
+
+
+<script src="js/m_data_get.js"></script>
+<script src="js/m_data_render.js"></script>
+<script src="js/main.js"></script>
+<!-- script src="js/session.js"></script-->
+
+</body>
+</html>

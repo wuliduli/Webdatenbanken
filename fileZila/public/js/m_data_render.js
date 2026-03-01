@@ -43,7 +43,85 @@ var m_data_render = (function () {
     // get json data with ajax
 
     m_data_render.render = {
+        listView_event: function () {
+            var eventsData = {
+                data: [
+                    {
+                        EID: "E1",
+                        name: "Test Event A",
+                        start: "2026-03-01 09:00",
+                        end: "2026-03-01 17:00",
+                        registered: 5,
+                        left: 0,
+                        notes: "Testdatensatz A"
+                    },
+                    {
+                        EID: "E2",
+                        name: "Test Event B",
+                        start: "2026-04-15 10:00",
+                        end: "2026-04-15 14:00",
+                        registered: 3,
+                        left: 1,
+                        notes: "Testdatensatz B"
+                    }
+                ],
+                finishedWithError: false
+            };
+            const $tbody = $("#events-tbody");
+            if (!eventsData.finishedWithError) {
+                $tbody.empty();
+                eventsData.data.forEach(function (eventItem) {
+                    const row = `
+                        <tr>
+                            <td>${eventItem.EID}</td>
+                            <td>${eventItem.name}</td>
+                            <td>${eventItem.start}</td>
+                            <td>${eventItem.end}</td>
+                            <td>${eventItem.registered}</td>
+                            <td>${eventItem.left}</td>
+                            <td>${eventItem.notes}</td>
+                        </tr>
+                    `;
+                    $tbody.append(row);
+                });
+            } 
+            eventsData = {};
+        },
+
+        // Populate the join/leave dropdowns with data from eventsData
+        populateEventDropdowns: function () {
+            var eventsData = {
+                data: [
+                    {
+                        EID: "E1",
+                        name: "Test Event A"
+                    },
+                    {
+                        EID: "E2",
+                        name: "Test Event B"
+                    }
+                ],
+                finishedWithError: false
+            };
+            var $join = $("#event-join-dp");
+            var $leave = $("#event-leave-dp");
+
+            function clearAndDefault($el) {
+                $el.empty();
+                $el.append('<option selected disabled>Event wählen...</option>');
+            }
+
+            clearAndDefault($join);
+            clearAndDefault($leave);
+
+            eventsData.data.forEach(function (ev) {
+                $join.append(`<option value="${ev.EID}">${ev.name}</option>`);
+                $leave.append(`<option value="${ev.EID}">${ev.name}</option>`);
+            });
+            eventsData = {};
+        },
         listView_timeEntry: function () {
+            console.log("Rendering Time Entries...");
             var jsonObj, htmlHeader, textItems, htmlText;
             const $tbody = $("#timeEntries-tbody");
             if (!timeEntry.finishedWithError) {

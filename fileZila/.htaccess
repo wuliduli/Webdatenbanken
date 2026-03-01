@@ -1,0 +1,9 @@
+RewriteEngine on
+RewriteRule ^$ public/ [L]
+RewriteRule (.*) public/$1 [L]
+
+# AuthUserFile /www/htdocs/w013c4d0/dev.wappprojects.de/wiws23i/.htpasswd
+# AuthGroupFile /dev/null
+# AuthName 'bitte Zugangsdaten eingeben'
+# AuthType Basic
+# require valid-user

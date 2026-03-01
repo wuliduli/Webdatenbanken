@@ -7,6 +7,7 @@ use App\Models\Database;
 
 class User
 {
+    private static string $tableName = "t_sign_in";
     //
     // CRUD - Create
     //
@@ -14,7 +15,7 @@ class User
     {
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("INSERT INTO sign_in (EID, UID, notes, sign_in_time, sign_out_time) 
+            $stmt = $db->prepare("INSERT INTO " . self::$tableName . " (EID, UID, notes, sign_in_time, sign_out_time) 
         VALUES (:firstname, :lastname, :email, :notes, :password, :mandtime)");
 
             $stmt->execute([
@@ -52,7 +53,7 @@ class User
     public static function getAll(): array
     {
         $db = Database::getConnection();
-        $stmt = $db->query("SELECT * FROM sign_in");
+        $stmt = $db->query("SELECT * FROM " . self::$tableName);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -62,7 +63,7 @@ class User
     public static function getByIds(int $EID, int $UID): ?array
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare("SELECT * FROM sign_in WHERE EID = :EID AND UID = :UID");
+        $stmt = $db->prepare("SELECT * FROM " . self::$tableName . " WHERE EID = :EID AND UID = :UID");
         $stmt->execute([':EID' => $EID, ':UID' => $UID]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -73,7 +74,7 @@ class User
     public static function getByEvent(int $EID): ?array
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare("SELECT * FROM sign_in WHERE EID = :EID");
+        $stmt = $db->prepare("SELECT * FROM " . self::$tableName . " WHERE EID = :EID");
         $stmt->execute([':EID' => $EID]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -84,7 +85,7 @@ class User
     public static function getByUser(int $UID): ?array
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare("SELECT * FROM sign_in WHERE UID = :UID");
+        $stmt = $db->prepare("SELECT * FROM " . self::$tableName . " WHERE UID = :UID");
         $stmt->execute([':UID' => $UID]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -96,7 +97,7 @@ class User
     {
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("UPDATE sign_in 
+            $stmt = $db->prepare("UPDATE " . self::$tableName . " 
             SET notes = :notes, sign_in_time = :sign_in_time, sign_out_time = :sign_out_time WHERE EID =:EID AND UID = :UID");
             $stmt->execute([
                 ':notes' => $data['notes'] ?? null,
@@ -135,7 +136,7 @@ class User
     public static function delete(int $EID, int $UID): void
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare("DELETE FROM sign_in WHERE EID =:EID AND UID = :UID");
+        $stmt = $db->prepare("DELETE FROM " . self::$tableName . " WHERE EID =:EID AND UID = :UID");
         $stmt->execute([':EID' => $EID, ':UID' => $UID]);
     }
 }

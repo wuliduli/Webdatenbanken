@@ -7,6 +7,7 @@ use App\Models\Database;
 
 class User
 {
+    private static string $tableName = "t_users";
     //
     // CRUD - Create
     //
@@ -14,7 +15,7 @@ class User
     {
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("INSERT INTO users (first_name, last_name, email, password, role_level, verified, active, num_failed_logins, create_at) 
+            $stmt = $db->prepare("INSERT INTO " . self::$tableName . " (first_name, last_name, email, password, role_level, verified, active, num_failed_logins, create_at) 
         VALUES (:first_name, :last_name, :email, :password, :role_level, :verified, :active, :num_failed_logins, :create_at)");
 
             $stmt->execute([
@@ -58,7 +59,7 @@ class User
     public static function getAll(): array
     {
         $db = Database::getConnection();
-        $stmt = $db->query("SELECT * FROM users");
+        $stmt = $db->query("SELECT * FROM " . self::$tableName);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -68,7 +69,7 @@ class User
     public static function getById(int $UID): ?array
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare("SELECT * FROM users WHERE UID = :UID");
+        $stmt = $db->prepare("SELECT * FROM " . self::$tableName . " WHERE UID = :UID");
         $stmt->execute([':UID' => $UID]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -80,7 +81,7 @@ class User
     {
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("UPDATE users 
+            $stmt = $db->prepare("UPDATE " . self::$tableName . " 
             SET first_name = :first_name, last_name = :last_name, email = :email, password = :password, role_level = :role_level, verified = :verified, active = :active, num_failed_logins = :num_failed_logins WHERE UID = :UID");
             $stmt->execute([
                 ':first_name' => $data['first_name'],
@@ -122,7 +123,7 @@ class User
     public static function delete(int $UID): void
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare("DELETE FROM users WHERE UID = :UID");
+        $stmt = $db->prepare("DELETE FROM " . self::$tableName . " WHERE UID = :UID");
         $stmt->execute([':UID' => $UID]);
     }
 
@@ -134,7 +135,7 @@ class User
     {
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("SELECT UID, password FROM users WHERE email = :email");
+            $stmt = $db->prepare("SELECT UID, password FROM " . self::$tableName . " WHERE email = :email");
             $stmt->execute([':email' => $email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             if (password_verify($password, $user['password'])) {

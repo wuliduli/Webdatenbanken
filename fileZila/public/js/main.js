@@ -109,6 +109,73 @@ $(document).ready(function () {
     });
   }
 
+  function callFirstAvailable(methodNames, args) {
+    let i;
+    for (i = 0; i < methodNames.length; i++) {
+      if (typeof m_data_get[methodNames[i]] === "function") {
+        m_data_get[methodNames[i]].apply(m_data_get, args);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function initEventsPage() {
+    if (!requireLogin()) {
+      return;
+    }
+    $(document).on("click", "#event-join-btn", function () {
+      const selectedId = $("#event-join-dp").val();
+      if (!selectedId) {
+        alert("Bitte wählen Sie ein Event aus!");
+        return;
+      }
+      console.log("Event beitreten:", selectedId);
+      m_data_get.joinEvent(selectedId, function (err) {
+        if (!err) {
+          alert("Erfolgreich dem Event beigetreten!");
+          m_data_get.getEvents(m_data_render.render.listView_event);
+        } else {
+          alert("Fehler beim Beitreten des Events!");
+        }
+      });
+    });
+
+    $(document).on("click", "#event-leave-btn", function () {
+      const selectedId = $("#event-leave-dp").val();
+
+      if (!selectedId) {
+        alert("Bitte wählen Sie ein Event aus!");
+        return;
+      }
+
+      const leaveNotes = $("#leave-notes").val();
+      // TODO: Klären, ob leaveNotes immer gesetzt sein muss
+      if (!leaveNotes) {
+        alert("Bitte geben Sie einen Grund für das Verlassen des Events an.");
+        return;
+      }
+
+      var leave_json = {
+        EID: selectedId,
+        notes: leaveNotes
+      }
+      console.log("Event verlassen:", leave_json);
+
+      m_data_get.leaveEvent(leave_json, function (err) {
+        if (!err) {
+          alert("Erfolgreich dem Event verlassen!");
+          m_data_get.getEvents(m_data_render.render.listView_event);
+        } else {
+          alert("Fehler beim Verlassen des Events!");
+        }
+      });
+    });
+
+    m_data_get.getEvents(m_data_render.render.listView_event);
+    m_data_get.getEventsForDropdown(m_data_render.render.populateEventDropdowns);
+  }
+
   function initTimeEntriesPage() {
     if (!requireLogin()) {
       return;
@@ -311,8 +378,12 @@ $(document).ready(function () {
     initLoginPage();
     return;
   }
-  if ($("#timeEntries-tbody").length) {
-    initTimeEntriesPage();
+  // if ($("#timeEntries-tbody").length) {
+  //   initTimeEntriesPage();
+  //   return;
+  // }
+  if ($("#events-tbody").length) {
+    initEventsPage();
     return;
   }
   if ($("#users-tbody").length) {

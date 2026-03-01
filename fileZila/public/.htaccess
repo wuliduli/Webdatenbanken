@@ -1,0 +1,12 @@
+# Redirect to front controller
+RewriteEngine On
+# RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
+
+#AuthUserFile /www/htdocs/w013c4d0/dev.wappprojects.de/wiws23i/public/.htpasswd
+#AuthGroupFile /dev/null
+#AuthName 'Bitte Zugangsdaten für die Eventmanagement-Applikation eingeben'
+#AuthType Basic
+#require valid-user
