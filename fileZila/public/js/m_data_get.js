@@ -5,6 +5,40 @@
 /*   (C) 2021 Wappfactory - Michael Kreinbihl       */
 /*                                                  */
 /* ------------------------------------------------ */
+/*                                                  */
+/* Aenderungen (02.03.2026):                        */
+/*                                                  */
+/* 1. API-Konstanten fuer Events und SignIn          */
+/*    hinzugefuegt (apiEndpointEvents,              */
+/*    apiEndpointSignIn, fullPathEvents,             */
+/*    fullPathSignIn) und in m_data_get.api          */
+/*    exportiert.                                    */
+/*                                                  */
+/* 2. ensureState() erweitert: eventsData wird       */
+/*    jetzt mit .data (Array), .finishedWithError    */
+/*    und .error initialisiert.                      */
+/*                                                  */
+/* 3. getEvents(do_next_func) implementiert:         */
+/*    GET-Request an /events, speichert Ergebnis     */
+/*    in window.eventsData (analog zu getUsers).     */
+/*                                                  */
+/* 4. getEventsForDropdown(do_next_func)             */
+/*    implementiert: Gleicher GET an /events,         */
+/*    aber fuer Dropdown-Render-Callback.            */
+/*                                                  */
+/* 5. joinEvent(EID, onDone) implementiert:          */
+/*    POST an /signIn mit EID, UID und               */
+/*    sign_in_time. Nutzt onDone(err)-Pattern.       */
+/*                                                  */
+/* 6. leaveEvent(leave_json, onDone) implementiert:  */
+/*    PUT an /signIn mit EID, UID, notes und         */
+/*    sign_out_time. Nutzt onDone(err)-Pattern.      */
+/*                                                  */
+/* 7. TODO-Block am Dateiende hinzugefuegt mit       */
+/*    offenen Backend-Aufgaben (SignInController,     */
+/*    routes.php, EventController).                  */
+/*                                                  */
+/* ------------------------------------------------ */
 /* jshint -W117 */
 
 var m_data_get = (function () {
@@ -15,13 +49,19 @@ var m_data_get = (function () {
   const baseUrl = "https://dev.wappprojects.de/wiws23i/api";
   const apiEndpointUsers = "/users";
   const apiEndpointTimeEntry = "/timeEntry";
+  const apiEndpointEvents = "/events";
+  const apiEndpointSignIn = "/signIn";
   const fullPathUsers = baseUrl + apiEndpointUsers;
   const fullPathTimeEntry = baseUrl + apiEndpointTimeEntry;
+  const fullPathEvents = baseUrl + apiEndpointEvents;
+  const fullPathSignIn = baseUrl + apiEndpointSignIn;
 
   m_data_get.api = {
     baseUrl: baseUrl,
     users: fullPathUsers,
     timeEntry: fullPathTimeEntry,
+    events: fullPathEvents,
+    signIn: fullPathSignIn,
   };
 
   m_data_get.ensureState = function () {
@@ -43,6 +83,12 @@ var m_data_get = (function () {
     if (!Array.isArray(timeEntry.data)) {
       timeEntry.data = [];
     }
+    if (!Array.isArray(eventsData.data)) {
+      eventsData.data = [];
+    }
+
+    eventsData.finishedWithError = false;
+    eventsData.error = eventsData.error || {};
 
     user.finishedWithError = false;
     user.error = user.error || {};
@@ -185,22 +231,111 @@ var m_data_get = (function () {
       },
     });
   };
-  m_data_get.getEvents = function(do_next_func) {
-    // Platzhalter
-    do_next_func();
+  // Alle Events vom Server laden und in eventsData speichern (analog zu getUsers)
+  m_data_get.getEvents = function (do_next_func) {
+    m_data_get.ensureState();
+
+    $.ajax({
+      method: "GET",
+      url: fullPathEvents,
+      headers: _authHeaders(),
+      success: function (result) {
+        eventsData.data = result !== null ? result : [];
+        eventsData.finishedWithError = false;
+        if (typeof do_next_func === "function") {
+          do_next_func();
+        }
+      },
+      error: function (xhr, status, error) {
+        eventsData.data = [];
+        eventsData.finishedWithError = true;
+        eventsData.error.status = status;
+        eventsData.error.code = xhr.status;
+        eventsData.error.message = error;
+        if (typeof do_next_func === "function") {
+          do_next_func();
+        }
+      },
+    });
   };
-  m_data_get.getEventsForDropdown = function(do_next_func) {
-    // Platzhalter
-    do_next_func();
+
+  // Events fuer Dropdown laden (gleicher Endpunkt, anderer Render-Callback)
+  m_data_get.getEventsForDropdown = function (do_next_func) {
+    m_data_get.ensureState();
+
+    $.ajax({
+      method: "GET",
+      url: fullPathEvents,
+      headers: _authHeaders(),
+      success: function (result) {
+        eventsData.data = result !== null ? result : [];
+        eventsData.finishedWithError = false;
+        if (typeof do_next_func === "function") {
+          do_next_func();
+        }
+      },
+      error: function (xhr, status, error) {
+        eventsData.data = [];
+        eventsData.finishedWithError = true;
+        eventsData.error.status = status;
+        eventsData.error.code = xhr.status;
+        eventsData.error.message = error;
+        if (typeof do_next_func === "function") {
+          do_next_func();
+        }
+      },
+    });
   };
-  m_data_get.joinEvent = function(EID, do_next_func) {
-    // Platzhalter
-    do_next_func();
+
+  // Benutzer fuer ein Event anmelden (POST an signIn-Endpunkt)
+  m_data_get.joinEvent = function (EID, onDone) {
+    $.ajax({
+      url: fullPathSignIn,
+      type: "POST",
+      headers: _authHeaders(),
+      contentType: "application/json",
+      data: JSON.stringify({
+        EID: EID,
+        UID: sessionStorage.getItem("CurrentUserID"),
+        sign_in_time: new Date().toISOString(),
+      }),
+      success: function (data) {
+        onDone(null, data);
+      },
+      error: function (xhr, status, error) {
+        onDone({
+          xhr: xhr,
+          status: status,
+          error: error,
+        });
+      },
+    });
   };
-  m_data_get.leaveEvent = function(leave_json, do_next_func) {
-    // Platzhalter
-    // leave_json = {EID: selectedId, notes: leaveNotes}
-    do_next_func();
+
+  // Benutzer von einem Event abmelden (PUT an signIn-Endpunkt mit Notizen)
+  m_data_get.leaveEvent = function (leave_json, onDone) {
+    $.ajax({
+      url: fullPathSignIn,
+      type: "PUT",
+      headers: _authHeaders(),
+      contentType: "application/json",
+      data: JSON.stringify({
+        EID: leave_json.EID,
+        UID: sessionStorage.getItem("CurrentUserID"),
+        notes: leave_json.notes,
+        sign_out_time: new Date().toISOString(),
+      }),
+      success: function (data) {
+        onDone(null, data);
+      },
+      error: function (xhr, status, error) {
+        onDone({
+          xhr: xhr,
+          status: status,
+          error: error,
+        });
+      },
+    });
   };
   m_data_get.getTimeEntries = function (do_next_func) {
     m_data_get.ensureState();
@@ -296,3 +431,10 @@ var m_data_get = (function () {
 */ 
 
 // m_data_get.init();
+
+/*
+ * TODO Backend-Aufgaben (offen):
+ * 1. SignInController erstellen (POST /signIn, PUT /signIn)
+ * 2. routes.php: GET /events, POST /signIn, PUT /signIn verdrahten
+ * 3. EventController: GET /events Endpunkt implementieren
+ */
