@@ -5,20 +5,36 @@
 /*   (C) 2021 Wappfactory - Michael Kreinbihl       */
 /*                                                  */
 /* ------------------------------------------------ */
-/*                                                  */
-/* Aenderungen (02.03.2026):                        */
-/*                                                  */
-/* 1. listView_event: Hardcodierte Testdaten         */
-/*    entfernt. Liest jetzt aus window.eventsData,   */
-/*    das von m_data_get.getEvents() befuellt wird.  */
-/*                                                  */
-/* 2. populateEventDropdowns: Hardcodierte           */
-/*    Testdaten entfernt. Liest jetzt aus            */
-/*    window.eventsData, das von                     */
-/*    m_data_get.getEventsForDropdown() befuellt     */
-/*    wird.                                          */
-/*                                                  */
-/* ------------------------------------------------ */
+/*                                                              */
+/* Aenderungen (02.03.2026):                                    */
+/*                                                              */
+/* 1. listView_event() - Event-Tabelle rendern:                 */
+/*    VORHER: Die Funktion hatte Testdaten direkt im Code       */
+/*    stehen (zwei fest eingebaute Test-Events "Test Event A"   */
+/*    und "Test Event B"). Das war nur zum Testen da, damit     */
+/*    man sehen konnte, ob die Tabelle richtig angezeigt wird.  */
+/*    NACHHER: Die Testdaten wurden entfernt. Die Funktion      */
+/*    liest jetzt aus der globalen Variable window.eventsData,  */
+/*    die vorher von m_data_get.getEvents() mit echten Daten    */
+/*    vom Server befuellt wurde. Der Ablauf ist:                */
+/*      1) main.js ruft m_data_get.getEvents(listView_event)   */
+/*      2) getEvents() holt die Daten per AJAX vom Server       */
+/*      3) getEvents() speichert die Daten in eventsData.data   */
+/*      4) getEvents() ruft listView_event() auf                */
+/*      5) listView_event() liest eventsData.data und baut      */
+/*         daraus die HTML-Tabellenzeilen                       */
+/*                                                              */
+/* 2. populateEventDropdowns() - Dropdown-Menues befuellen:     */
+/*    VORHER: Auch hier waren zwei Testdaten-Events fest im     */
+/*    Code eingebaut ("Test Event A", "Test Event B").           */
+/*    NACHHER: Die Testdaten wurden entfernt. Die Funktion      */
+/*    liest jetzt ebenfalls aus window.eventsData. Der Ablauf   */
+/*    ist der gleiche wie oben, nur dass hier die <select>-     */
+/*    Dropdown-Menues (#event-join-dp und #event-leave-dp)      */
+/*    mit <option>-Elementen befuellt werden, statt einer       */
+/*    Tabelle.                                                  */
+/*                                                              */
+/* ---------------------------------------------------------------- */
 /* jshint -W117 */
 
 var m_data_render = (function () {
