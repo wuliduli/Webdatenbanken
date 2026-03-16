@@ -4,7 +4,8 @@
 
 - [Kurzbeschreibung](#kurzbeschreibung)
 - [Aufgabenstellung](#aufgabenstellung)
-- [Architektur](#architektur)
+- [Architektur -alt](#architektur--alt)
+- [Architektur -neu](#architektur--neu)
 - [Verwendete / vorgeschlagene Technologien](#verwendete--vorgeschlagene-technologien)
 - [Nützliche Links / Lernmaterial](#nützliche-links--lernmaterial)
 - [Datenbankpasswörter & Anleitung](#datenbankpasswörter--anleitung)
@@ -40,8 +41,8 @@ Ziel ist es, die Kommunikation zwischen unserer Gruppe (Gruppe‑FB4) und der RE
 - Authentifizierung/Autorisierung mittels JSON Web Tokens (JWT)
 - Asynchrone Anfragen mit AJAX (jQuery)
 
-## Architektur
-## Überblick
+## Architektur -alt
+### Überblick
 ```bash
 wiwsall
 ├── public 📁
@@ -51,7 +52,7 @@ wiwsall
 ├── .htpasswd
 └── index.html
 ```
-# JavaScript
+### JavaScript
 ```bash
 wiwsall
 ├── public
@@ -75,7 +76,7 @@ wiwsall
 ├── .htpasswd
 └── index.html
 ```
-# PHP und DB
+### PHP und DB
 ```bash
 wiwsall
 ├── public
@@ -90,6 +91,61 @@ wiwsall
 │   │   ├── Database.php
 │   │   ├── TimeEntry.php
 │   │   ├── User.php
+│   ├── Routes 📁
+│   │    └── routes.php
+│   └── Views 📁
+├── vendor 📁
+├── .htaccess
+├── .htpasswd
+└── index.html
+```
+## Architektur -neu
+### JavaScript
+```bash
+wiwsall
+├── public
+│   ├── css 📁
+│   ├── img 📁
+│   ├── js 📁
+│   │   ├── bootstrap 📁
+│   │   ├── m_data_get.js 
+│   │   ├── m_data_render.js 
+│   │   └── main.js 
+│   ├── swagger 📁
+│   ├── .htaccess
+│   ├── .htaccess_
+│   ├── eventmanager.html
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── index.php
+│   ├── timeEntries.html
+│   └── users.html
+├── src 📁
+├── vendor 📁
+├── .htaccess
+├── .htpasswd
+└── index.html
+```
+### PHP und DB
+```bash
+wiwsall
+├── public
+├── src 📁
+│   ├── Controllers 📁
+│   │   ├── EventController.php
+│   │   ├── JWTHandler.php
+│   │   ├── SignInController.php
+│   │   ├── TimeEntryController.php
+│   │   └── UserController.php
+│   ├── Database 📁
+│   │   └── /* database.sql
+│   ├── Models 📁
+│   │   ├── Database.php
+│   │   ├── Events.php
+│   │   ├── Sign_In.php
+│   │   ├── TimeEntry.php
+│   │   ├── User.php
+│   │   ├── Users.php
 │   ├── Routes 📁
 │   │    └── routes.php
 │   └── Views 📁
@@ -124,7 +180,9 @@ Zusätzlich: Lernstoff aus den Vorlesungsfolien "Theorie Session – Kapitel 4: 
 
 
 ## Datenbankpasswörter & Anleitung
-
+### Zugriff aktuell
+Andy Le Hoang ist Stellvertretend für FB4 für die Serverkommunikation zuständig und hat somit Zugriff auf den serverseitigen Projektstand.
+### Zugriff eigentlich (ohne funkt.)
 - DB: 23i_dev_mydbox
 - FTP: 23i_dev_myftpox
 - Path: 23i_dev_mypathox
